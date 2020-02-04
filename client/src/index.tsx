@@ -7,7 +7,7 @@ import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 const client = new ApolloClient({
-    uri: 'http://localhost:5000/graphql'
+    uri: '/graphql'
 })
 
 const app =
