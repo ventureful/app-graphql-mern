@@ -4,11 +4,11 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
     "start": "node app.js",
     "server": "nodemon app.js",
     "client": "npm run dev --prefix client",
-    "dev": "concurrently  \"npm run client\" \"npm run server\" ",
-    "postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "dev": "concurrently  \"npm run client\" \"npm run server\" "
   },
   "author": "",
   "license": "ISC",
