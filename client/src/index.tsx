@@ -7,7 +7,7 @@ import './index.css';
 import 'antd/dist/antd.min.css'
 
 const client = new ApolloClient({
-    uri: '/graphql'
+    uri: 'http://localhost:5000/graphql'
 })
 
 const app =

@@ -32,7 +32,7 @@ export const BookmarksTable: React.FC<BookmarksProps> = ({bookmarks, removeBookm
             key: 'link',
             render: (bookmark: Bookmark) => (
                 <span>
-                    <a href={`https://${bookmark.url}`} target="_blank">Open</a>
+                    <a href={`https://${bookmark.url}`} target="_blank" rel="noopener noreferrer">Open</a>
                 </span>
             ),
         },
