@@ -1,6 +1,6 @@
 import React from "react";
 import {BrowserRouter as Router} from "react-router-dom";
-import {ToastContainer} from "react-toastify";
+import {Layout, Menu} from "antd";
 import {Routes} from "./Routes";
 import {useAuth} from "./hooks/auth.hook";
 import {AuthContext} from "./context/AuthContext";
@@ -14,15 +14,31 @@ const App = () => {
 
     const routes = Routes(isAuth);
 
+    const {Content} = Layout;
+
     return (
         <AuthContext.Provider value={{
             logout, login, token, user, isAuth, name
         }}>
-            <ToastContainer/>
-            {isAuth && <Navigation/>}
-            <Router>
-                {routes}
-            </Router>
+            <Layout style={{width: '100%'}}>
+                {isAuth && <Navigation/>}
+                <Layout>
+                    <Content
+                        style={{
+                            margin: '24px 16px',
+                            padding: 24,
+                            background: '#fff',
+                            minHeight: 280,
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Router>
+                            {routes}
+                        </Router>
+                    </Content>
+                </Layout>
+            </Layout>
         </AuthContext.Provider>
     );
 };

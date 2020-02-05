@@ -2,6 +2,7 @@ const {GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList, 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../model/User');
+const Bookmark = require('../model/Bookmark');
 
 const UserType = new GraphQLObjectType({
     name: 'User',
@@ -13,6 +14,15 @@ const UserType = new GraphQLObjectType({
         token: {type: GraphQLString}
     })
 });
+
+const BookmarkType = new GraphQLObjectType({
+    name: 'Bookmark',
+    fields: () => ({
+        id: {type: GraphQLID},
+        url: {type: GraphQLString},
+        owner: {type: GraphQLID}
+    })
+})
 
 const Mutation = new GraphQLObjectType({
     name: 'Mutation',
@@ -76,6 +86,38 @@ const Mutation = new GraphQLObjectType({
                     throw new Error('Что-то пошло не так')
                 }
             }
+        },
+        addBookmark: {
+            type: BookmarkType,
+            args: {
+                url: {type: new GraphQLNonNull(GraphQLString)},
+                owner: {type: new GraphQLNonNull(GraphQLID)}
+            },
+            resolve(parent, {url, owner}) {
+                const bookmark = new Bookmark({url, owner})
+                return bookmark.save()
+            }
+        },
+        removeBookmark: {
+            type: BookmarkType,
+            args: {id: {type: new GraphQLNonNull(GraphQLID)}},
+            resolve(parent, {id}) {
+                return Bookmark.findByIdAndRemove(id)
+            }
+        },
+        updateBookmark: {
+            type: BookmarkType,
+            args: {
+                id: {type: new GraphQLNonNull(GraphQLID)},
+                url: {type: new GraphQLNonNull(GraphQLString)}
+            },
+            resolve(parent, {id, url}) {
+                return Bookmark.findByIdAndUpdate(
+                    id,
+                    {$set: {url}},
+                    {new: true}
+                )
+            }
         }
     }
 });
@@ -83,8 +125,22 @@ const Mutation = new GraphQLObjectType({
 const Query = new GraphQLObjectType({
     name: 'Query',
     fields: {
-        getUsers: {
-            type: UserType
+        getBookmarks: {
+            type: GraphQLList(BookmarkType),
+            args: {owner: {type: new GraphQLNonNull(GraphQLID)}},
+            async resolve(parent, {owner}) {
+                try {
+                    const bookmarks = await Bookmark.find({owner})
+
+                    if (!bookmarks) {
+                        return new Error('У вас нет закладок')
+                    }
+
+                    return bookmarks
+                } catch (e) {
+                    throw new Error('Что-то пошло нет так')
+                }
+            }
         }
     }
 });

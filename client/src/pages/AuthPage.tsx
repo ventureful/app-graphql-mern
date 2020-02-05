@@ -1,26 +1,32 @@
 import React, {useState} from "react";
+import {Row, Col, Button} from "antd";
 import {Login} from "../components/Login";
 import {Register} from "../components/Register";
-import {Button} from "@atlaskit/button/dist/esm/components/Button";
 
 export const AuthPage: React.FC = () => {
     const [toggle, setToggle] = useState<boolean>(true)
 
     return (
-        <>
+        <Row style={{marginTop: 120}}>
+            <Col span={22}>
             {toggle
-                ? <Login/>
-                : <Register/>
-            }
-            <Button
-                appearance={'subtle-link'}
-                onClick={() => setToggle(prevState => prevState = !prevState)}
-            >
-                {toggle
-                    ? 'Загегистрируйтесь! '
-                    : 'Нажмите если есть аккаунт!'
+                    ? <Login/>
+                    : <Register/>
                 }
-            </Button>
-        </>
+                <Button
+                    type={'danger'}
+                    size={'small'}
+                    onClick={() => setToggle(prevState => prevState = !prevState)}
+                    style={{
+                        margin: '1rem'
+                    }}
+                >
+                    {toggle
+                        ? 'Загегистрируйтесь! '
+                        : 'Нажмите если есть аккаунт!'
+                    }
+                </Button>
+            </Col>
+        </Row>
     );
 };

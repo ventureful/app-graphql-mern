@@ -1,22 +1,12 @@
 import React, {useContext} from "react";
 import {useMutation} from "@apollo/react-hooks";
-import {gql} from "apollo-boost";
 import TextField from "@atlaskit/textfield";
-import Button, {ButtonGroup} from "@atlaskit/button";
-import Form, {Field, FormFooter, ErrorMessage, ValidMessage} from "@atlaskit/form";
-import {toast} from "react-toastify";
+import {Button} from "antd";
+import Form, {Field, FormFooter, HelperMessage} from "@atlaskit/form";
+import {message} from 'antd'
 import {User} from "../types";
 import {AuthContext} from "../context/AuthContext";
-
-const LOGIN_USER = gql`
-    mutation loginUser($email: String!, $password: String!) {
-      loginUser(email: $email, password: $password) {
-        id
-        name
-        token
-      }
-    }
-`;
+import {LOGIN_USER} from "../graphql/mutations";
 
 export const Login: React.FC = () => {
     const [loginUser] = useMutation(LOGIN_USER);
@@ -32,13 +22,9 @@ export const Login: React.FC = () => {
 
             login(token, id, name);
 
-            toast.success('Вы вошли в систему', {
-                autoClose: 3000
-            })
+            message.success(`Добро пожаловать ${name}`)
         } catch (e) {
-            toast.error(`${e.message}`, {
-                autoClose: 3000
-            })
+            message.error(e.message)
         }
     };
 
@@ -49,22 +35,14 @@ export const Login: React.FC = () => {
                 {({formProps, submitting}) => (
                     <form {...formProps}>
                         <Field name="email" label="Email" defaultValue={''} isRequired
-                               validate={(value: any) =>
-                                   !value.includes('@') ? 'TOO_SHORT' : undefined
-                               }
                         >
-                            {({fieldProps, error, valid}) => (
+                            {({fieldProps}) => (
                                 <>
                                     <TextField {...fieldProps} />
-                                    {error && (
-                                        <ErrorMessage>
+                                    {(
+                                        <HelperMessage>
                                             Must contain @ symbol
-                                        </ErrorMessage>
-                                    )}
-                                    {!error && valid && (
-                                        <ValidMessage>
-                                            Nice one, this email is available
-                                        </ValidMessage>
+                                        </HelperMessage>
                                     )}
                                 </>
                             )}
@@ -74,30 +52,22 @@ export const Login: React.FC = () => {
                             label="Password"
                             defaultValue={''}
                             isRequired
-                            validate={(value: string | undefined) =>
-                                value && value.length < 6 ? 'TOO_SHORT' : undefined
-                            }
                         >
-                            {({fieldProps, error, valid}) => (
+                            {({fieldProps}) => (
                                 <>
                                     <TextField type="password" {...fieldProps} />
-                                    {error && (
-                                        <ErrorMessage>
+                                    {(
+                                        <HelperMessage>
                                             Password needs to be more than 6 characters.
-                                        </ErrorMessage>
-                                    )}
-                                    {!error && valid && (
-                                        <ValidMessage>Good password</ValidMessage>
+                                        </HelperMessage>
                                     )}
                                 </>
                             )}
                         </Field>
                         <FormFooter>
-                            <ButtonGroup>
-                                <Button type="submit" appearance="primary" isLoading={submitting}>
-                                    Login
-                                </Button>
-                            </ButtonGroup>
+                            <Button type="primary" htmlType={'submit'} disabled={submitting}>
+                                Login
+                            </Button>
                         </FormFooter>
                     </form>
                 )}

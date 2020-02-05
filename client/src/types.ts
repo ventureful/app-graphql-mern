@@ -3,3 +3,8 @@ export interface User {
     email: string
     password: string
 }
+
+export interface Bookmark {
+    id: string
+    url: string
+}

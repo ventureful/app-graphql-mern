@@ -1,21 +1,11 @@
 import React from "react";
 import {useMutation} from "@apollo/react-hooks";
-import {gql} from "apollo-boost";
+import {Button} from "antd";
 import TextField from "@atlaskit/textfield";
-import Button, {ButtonGroup} from "@atlaskit/button";
 import Form, {Field, FormFooter, ErrorMessage, ValidMessage} from "@atlaskit/form";
-import {toast} from "react-toastify";
+import {message} from 'antd'
 import {User} from "../types";
-
-const REGISTER_USER = gql`
-    mutation registerUser($name: String!, $email: String!, $password: String!) {
-      registerUser(name: $name, email: $email, password: $password) {
-        name
-        email
-        password
-      }
-    }
-`;
+import {REGISTER_USER} from "../graphql/mutations";
 
 export const Register: React.FC = () => {
     const [registerUser] = useMutation(REGISTER_USER);
@@ -26,13 +16,13 @@ export const Register: React.FC = () => {
                 variables: {...user}
             });
 
-            toast.success('Вы зарегистрировались успешно, пожалуйста войдите в аккаунт', {
-                autoClose: 3000
-            })
+            message.success('Вы зарегистрировались успешно, пожалуйста войдите в аккаунт');
+
+            user.name = '';
+            user.email = '';
+            user.password = ''
         } catch (e) {
-            toast.error(`${e.message}`, {
-                autoClose: 3000
-            })
+            message.error(e.message)
         }
     };
 
@@ -112,11 +102,9 @@ export const Register: React.FC = () => {
                             )}
                         </Field>
                         <FormFooter>
-                            <ButtonGroup>
-                                <Button type="submit" appearance="primary" isLoading={submitting}>
+                                <Button type="primary" htmlType={'submit'} disabled={submitting}>
                                     Register
                                 </Button>
-                            </ButtonGroup>
                         </FormFooter>
                     </form>
                 )}

@@ -1,22 +1,22 @@
-const express = require('express')
-const cors = require('cors')
-const path = require('path')
-const graphqlHTTP = require('express-graphql')
-const mongoose = require('mongoose')
-const schema = require('./schema/schema')
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const graphqlHTTP = require('express-graphql');
+const mongoose = require('mongoose');
+const schema = require('./schema/schema');
 
-const uri = require('./config/keys').mongoUri
-const PORT = process.env.PORT || require('./config/keys').port
+const uri = require('./config/keys').mongoUri;
+const PORT = process.env.PORT || require('./config/keys').port;
 
-const app = express()
+const app = express();
 
-app.use(cors())
+app.use(cors());
 
 app.use('/graphql', graphqlHTTP({
     schema,
     graphiql: true,
     customFormatErrorFn: error => ({message: error.message})
-}))
+}));
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('client/build'));
@@ -42,4 +42,4 @@ async function start() {
 }
 
 
-start()
+start();

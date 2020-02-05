@@ -4,7 +4,7 @@ import App from './App';
 import ApolloClient from 'apollo-boost'
 import {ApolloProvider} from '@apollo/react-hooks'
 import './index.css';
-import 'react-toastify/dist/ReactToastify.css';
+import 'antd/dist/antd.min.css'
 
 const client = new ApolloClient({
     uri: '/graphql'
